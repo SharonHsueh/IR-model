@@ -1,4 +1,3 @@
-import datetime
 import os
 import numpy as np
 import pandas as pd
@@ -7,21 +6,22 @@ from sklearn.metrics.pairwise import cosine_similarity
 lexicom = set()   #all different word in doc & query
 
 
-doc_path = r"C:\Users\user\dataHW1\documents"
-all_doc = os.listdir(doc_path)
+with open("docs_id_list.txt") as f:
+    all_doc = f.read.splitlines()
+
 documentofall = {}
 for filename in all_doc:
-    with open(os.path.join("documents", filename), 'r',encoding="utf-8") as f:
+    with open('documents/'+ filename + '.txt', 'r',encoding="utf-8") as f:
         text = f.read()
         documentofall[filename] = text.split()
         #lexicom = lexicom.union(set(documentofall[filename])) #in order to make the system more efficient
 
-query_path = r"C:\Users\user\dataHW1\queries"
-all_query = os.listdir(query_path)
-queryofall = {}
+with open('queries_id_list') as f:
+    all_query = f.read.splitlines()
 
+queryofall = {}
 for filename in all_query:
-    with open(os.path.join("queries", filename), 'r',encoding="utf-8") as f:
+    with open('queries/' + filename +'.txt', 'r',encoding="utf-8") as f:
         text = f.read()
         queryofall[filename] = text.split()
         lexicom = lexicom.union(set(queryofall[filename]))
@@ -66,7 +66,6 @@ for termfreq in tf_list_of_doc:
     temp = [x*y for x,y in zip(termfreq,idf)]
     tf_idf_doc.append(temp) 
 print(len(tf_idf_doc))
-
 #tf-idf(query)
 tf_idf_query = []
 temp = []
@@ -92,16 +91,13 @@ twodarray = pd.DataFrame(cosine_of_doc_query)
 twodarray.index = docs_id_list
 twodarray.columns = query_id_list
 print(twodarray)
-
 #result
-now = datetime.datetime.now()
-save_filename = 'result' + '_' + now.strftime("%y%m%d_%H%M") + '.txt'
+file = 'result' + '_' + now.strftime("%y%m%d_%H%M") +'.csv'
 
-print(save_filename)
-
-with open(save_filename, 'w') as f:
+with open(file, "w",encoding="utf-8") as f:
     f.write('Query,RetrievedDocuments\n')
     for query in query_id_list:
         f.write(query + ",")
         listedscore = twodarray[query].sort_values(ascending=False)
         f.write(' '.join(listedscore.index.to_list())+"\n")
+    
