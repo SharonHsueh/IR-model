@@ -1,5 +1,5 @@
 # IR-model
-You need a folder to save all of the file named in the doc_id_list
+You need a folder to save all of the file named in the doc_id_list  
 Also for queries_id_list.txt
 # step
 * First :  
